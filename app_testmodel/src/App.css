@@ -1,0 +1,224 @@
+/* src/App.css - เวอร์ชันสองคอลัมน์ + ผลลัพธ์แม่นยำ */
+/* เพิ่มต่อจาก App.css เดิมของคุณ */
+
+.detection-canvas {
+  position: relative;
+  display: inline-block;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.detection-canvas img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.bounding-box {
+  position: absolute;
+  border: 3px solid;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 2px 8px;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* เพิ่มต่อท้าย App.css เดิม */
+
+.class-italian      { border-color: #00924b; } 
+.class-deertongue   { border-color: #ed9600; } 
+.class-greenlollo   { border-color: #84cc16; } 
+.class-rossa        { border-color: #ef4444; } 
+.class-redcoral     { border-color: #ec4899; } 
+.class-caramel      { border-color: #d97706; } 
+.class-empty        { border-color: #94a3b8; border-style: dashed; } 
+
+.app-container {
+  min-height: 100vh;
+  background-color: #000;
+  color: white;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+.header {
+  border-bottom: 1px solid #1f1f1f;
+  padding: 1.5rem 0;
+  background-color: #000;
+}
+
+.header .inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.header h1 {
+  font-size: 2rem;
+  font-weight: 300;
+}
+
+.main-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+}
+
+/* Upload Box */
+.upload-box {
+  height: 12rem;
+  background-color: #0f0f0f;
+  border: 2px dashed #333;
+  border-radius: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-box:hover {
+  border-color: #555;
+  background-color: #1a1a1a;
+}
+
+.upload-text {
+  font-size: 1rem;
+  color: #9ca3af;
+  margin-top: 0.75rem;
+  font-weight: 500;
+}
+
+/* Action Button */
+.action-btn {
+  height: 12rem;
+  background: linear-gradient(to right, #3b82f6, #8b5cf6);
+  color: white;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 1.125rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+}
+
+.action-btn:hover:not(:disabled) {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(59, 130, 246, 0.4);
+}
+
+.action-btn:disabled {
+  background: #1f2937;
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Result Zone */
+.result-zone h3 {
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin-bottom: 1.5rem;
+  color: #e5e7eb;
+}
+
+.result-images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.result-card {
+  background-color: #0f0f0f;
+  border: 1px solid #1f1f1f;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.result-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.result-label {
+  padding: 0.75rem 1rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+/* Accuracy Stats */
+.stats-card {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid #334155;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+.stats-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #60a5fa;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #334155;
+}
+
+.stat-item:last-child {
+  border-bottom: none;
+}
+
+.class-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.class-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.class-car { background-color: #3b82f6; }
+.class-person { background-color: #10b981; }
+.class-dog { background-color: #f59e0b; }
+.class-cat { background-color: #ec4899; }
+
+.confidence {
+  font-weight: 600;
+  color: #86efac;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .main-content {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  .result-images {
+    grid-template-columns: 1fr;
+  }
+}
