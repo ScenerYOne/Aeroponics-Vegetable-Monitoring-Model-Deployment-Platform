@@ -37,8 +37,8 @@ It is recommended to use Conda for environment management.
 
 ```bash
 # Create a new environment
-conda create -n hydrodetect python=3.9
-conda activate hydrodetect
+conda create -n app_testmodel python=3.9
+conda activate app_testmodel
 
 # Install dependencies
 pip install fastapi uvicorn ultralytics opencv-python numpy multipart
@@ -61,7 +61,7 @@ Ensure your Conda environment is activated.
 
 ```bash
 # Run from the root directory (D:\APP_TESTMODEL)
-conda activate hydrodetect
+conda activate app_testmodel
 python -m uvicorn server:app --reload --host 127.0.0.1 --port 8000
 
 ```
