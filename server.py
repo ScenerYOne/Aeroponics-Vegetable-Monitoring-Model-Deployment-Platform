@@ -20,24 +20,22 @@ app.add_middleware(
 UPLOAD_DIR = Path("uploaded_models")
 UPLOAD_DIR.mkdir(exist_ok=True)
 
+# เก็บโมเดลทั้งหมด
 loaded_models = {}
 
-# สีสวย ๆ สำหรับแต่ละคลาส (B
+# เก็บโมเดลที่กำลังใช้งานอยู่ (โมเดลล่าสุดที่อัปโหลด)
+current_model_id: str | None = None  # <-- ตัวแปรนี้คือหัวใจสำคัญ!
+
 CLASS_COLORS = [
-    (255, 0, 0),      # แดง      → Caramel Romaine
-    (0, 255, 0),      # เขียว    → Italian
-    (0, 0, 255),      # น้ำเงิน   → Red Coral
-    (255, 255, 0),    # เหลือง   → Butterhead
-    (255, 0, 255),    # ชมพู     → Frillice
-    (0, 255, 255),    # ฟ้า      → Green Oak
-    (255, 165, 0),    # ส้ม      → Red Oak
-    (128, 0, 128),    # ม่วง
-    (255, 192, 203),  # ชมพูอ่อน
-    (0, 128, 128),    # เขียวเข้ม
+    (255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0),
+    (255, 0, 255), (0, 255, 255), (255, 165, 0), (128, 0, 128),
+    (255, 192, 203), (0, 128, 128)
 ]
 
 @app.post("/upload-model")
 async def upload_model(file: UploadFile = File(...)):
+    global current_model_id
+    
     if not file.filename.lower().endswith((".pt", ".pth")):
         raise HTTPException(400, detail="รองรับเฉพาะไฟล์ .pt หรือ .pth")
 
@@ -59,23 +57,38 @@ async def upload_model(file: UploadFile = File(...)):
             "names": class_names
         }
 
+        # อัปเดตโมเดลปัจจุบันทันที
+        current_model_id = model_id
+
         return {
             "model_id": model_id,
             "class_names": class_names,
-            "message": f"อัปโหลดสำเร็จ! พบ {len(class_names)} คลาส"
+            "message": f"อัปโหลดสำเร็จ! พบ {len(class_names)} คลาส (ใช้งานอัตโนมัติ)"
         }
     except Exception as e:
         if model_path.exists():
             model_path.unlink()
         raise HTTPException(500, detail=f"โหลดโมเดลไม่สำเร็จ: {str(e)}")
 
+@app.get("/current-model")
+async def get_current_model():
+    """เช็คว่าใช้โมเดลไหนอยู่ตอนนี้"""
+    if not current_model_id or current_model_id not in loaded_models:
+        return {"current_model_id": None, "class_names": []}
+    info = loaded_models[current_model_id]
+    return {
+        "current_model_id": current_model_id,
+        "class_names": info["names"]
+    }
 
 @app.post("/predict")
-async def predict(model_id: str = "", file: UploadFile = File(...)):
-    if not model_id or model_id not in loaded_models:
-        raise HTTPException(404, detail="ไม่พบโมเดล กรุณาอัปโหลดใหม่ก่อน")
+async def predict(file: UploadFile = File(...)):
+    global current_model_id
+    
+    if not current_model_id or current_model_id not in loaded_models:
+        raise HTTPException(404, detail="ยังไม่ได้อัปโหลดโมเดล กรุณาอัปโหลด .pt ก่อน")
 
-    model_info = loaded_models[model_id]
+    model_info = loaded_models[current_model_id]
     model = model_info["model"]
     class_names = model_info["names"]
 
@@ -87,34 +100,25 @@ async def predict(model_id: str = "", file: UploadFile = File(...)):
 
     results = model(img, conf=0.3, iou=0.45)[0]
 
-    # วาดกรอบ + ข้อความสีตามคลาส
+    # วาดกรอบสีตามคลาส
     for box in results.boxes:
         x1, y1, x2, y2 = map(int, box.xyxy[0])
         cls_id = int(box.cls[0])
         conf = float(box.conf[0])
-
-        # สีตามคลาส (วนสีใหม่ถ้าเกิน)
         color = CLASS_COLORS[cls_id % len(CLASS_COLORS)]
 
-        # กรอบหนา 5 พิกเซล
         cv2.rectangle(img, (x1, y1), (x2, y2), color, 5)
-
-        # ข้อความพื้นหลัง + ข้อความสีขาว
         label = f"{class_names[cls_id]} {conf:.0%}"
         (w_text, h_text), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 1.0, 3)
         cv2.rectangle(img, (x1, y1 - h_text - 20), (x1 + w_text + 20, y1), color, -1)
         cv2.putText(img, label, (x1 + 10, y1 - 10),
                     cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255), 3)
 
-    # แปลงเป็น base64
     _, buffer = cv2.imencode(".jpg", img, [int(cv2.IMWRITE_JPEG_QUALITY), 92])
     img_base64 = base64.b64encode(buffer).decode()
 
-    # ส่ง detections กลับไปให้ frontend
     detections = []
-    h, w = img.shape[:2]
     for box in results.boxes:
-        x1, y1, x2, y2 = map(int, box.xyxy[0])
         cls_id = int(box.cls[0])
         detections.append({
             "cls": cls_id,
@@ -125,5 +129,6 @@ async def predict(model_id: str = "", file: UploadFile = File(...)):
     return {
         "image": img_base64,
         "detections": detections,
-        "class_names": class_names
+        "class_names": class_names,
+        "current_model_id": current_model_id
     }
