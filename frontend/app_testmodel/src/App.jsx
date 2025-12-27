@@ -1,4 +1,3 @@
-// src/App.jsx - หน้าตาเหมือนเดิมเป๊ะทุกอย่าง แต่ทำงานจริง 100%
 import { useState } from 'react';
 import { Upload, Zap, Image as ImageIcon, Brain } from 'lucide-react';
 import './App.css';

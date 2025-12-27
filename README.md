@@ -1,4 +1,4 @@
-#  AppTestModel - Hydroponic Vegetable Detection
+#  AI Model Deployment Platform - Hydroponic Vegetable Detection
 
 ![Python](https://img.shields.io/badge/Python-3.9-blue?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.95-009688?logo=fastapi&logoColor=white)
@@ -7,6 +7,43 @@
 
 A web-based tool for testing YOLO models on hydroponic vegetable images.
 **AppTestModel** allows users to upload a custom `.pt` model file and test images to instantly visualize detection results with bounding boxes and class names.
+
+## 🔗 Connected Projects (End-to-End AI Pipeline)
+
+This project is part of a complete AI workflow, covering data preparation, model training, and deployment.
+
+### 1️⃣ Image Preprocessing & Dataset Generation  
+[ScenerYOne/Aeroponics-Vegetable-Monitoring-Image-Preprocessing](https://github.com/ScenerYOne/Aeroponics-Vegetable-Monitoring-Image-Preprocessing.git)
+
+- Perspective Transformation for camera correction  
+- Image standardization  
+- Dataset preparation for YOLO training  
+- Manual labeling workflow  
+
+---
+
+### 2️⃣ Model Training & Evaluation  
+[ScenerYOne/Aeroponics-Vegetable-Monitoring-Model-Training-Evaluation](https://github.com/ScenerYOne/Aeroponics-Vegetable-Monitoring-Model-Training-Evaluation)
+
+- Dataset cleaning & normalization  
+- Multi-dataset integration  
+- YOLOv8 model training and fine-tuning  
+- Automated training reports (mAP, Precision, Recall)  
+- ONNX export  
+
+---
+
+### 3️⃣ Model Deployment Platform (This Repository)
+[ScenerYOne/Aeroponics-Vegetable-Monitoring-Model-Deployment-Platform](https://github.com/ScenerYOne/Aeroponics-Vegetable-Monitoring-Model-Deployment-Platform)
+
+- Web-based YOLO model testing  
+- FastAPI backend for inference  
+- React frontend for visualization  
+- Real-time detection with bounding boxes and class labels  
+
+---
+
+## 🔁 Full System Workflow
 
 ##  Features
 
