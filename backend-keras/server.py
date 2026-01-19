@@ -10,7 +10,6 @@ import time
 import gc
 import os
 
-# ================= CONFIG =================
 MODEL_DIR = os.getenv("MODEL_DIR", "uploaded_models")
 MAX_LOADED_MODELS = int(os.getenv("MAX_LOADED_MODELS", 2))
 
@@ -28,7 +27,6 @@ UPLOAD_DIR.mkdir(exist_ok=True)
 
 loaded_models = {}
 
-# ================= UTILS =================
 def manage_memory():
     if len(loaded_models) > MAX_LOADED_MODELS:
         oldest_id = min(
@@ -46,7 +44,7 @@ def infer_input_size(model):
         shape = shape[0]
     if len(shape) >= 3:
         return (shape[2], shape[1])
-    return None  # ไม่ใช่ image model
+    return None  
 
 def detect_task(preds):
     """
@@ -108,7 +106,6 @@ async def predict(
     input_size = model_info["input_size"]
     model_info["last_used"] = time.time()
 
-    # ================= IMAGE MODELS =================
     if input_size is not None:
         if file is None:
             raise HTTPException(400, "Image file required")
@@ -150,7 +147,7 @@ async def predict(
                 "model_id": model_id
             }
 
-        # ---------- Regression (image → value) ----------
+        # ---------- Regression  ----------
         if task == "regression":
             value = float(preds[0][0])
             return {
@@ -159,7 +156,7 @@ async def predict(
                 "model_id": model_id
             }
 
-    # ================= NON-IMAGE MODELS =================
+
     preds = model.predict(None, verbose=0)
     task = detect_task(preds)
 

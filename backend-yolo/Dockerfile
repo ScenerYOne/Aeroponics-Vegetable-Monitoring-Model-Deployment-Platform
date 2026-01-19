@@ -1,4 +1,14 @@
-FROM ultralytics/ultralytics:latest
+FROM python:3.10-slim
+
+# System dependencies for OpenCV / Ultralytics (provides libGL.so.1 and X libs)
+RUN apt-get update && apt-get install -y \
+    libgl1 \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender1 \
+    libxcb1 \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -10,13 +20,11 @@ RUN pip install --no-cache-dir \
     ultralytics \
     opencv-python-headless \
     onnx \
-    onnxruntime \
-    onnxruntime-gpu \
-    tensorflow
+    onnxruntime
+
 
 COPY server.py .
-COPY uploaded_models uploaded_models000
 
-EXPOSE 8000
+RUN mkdir -p uploaded_models
 
-CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "uvicorn server:app --host 0.0.0.0 --port ${PORT:-8000}"]

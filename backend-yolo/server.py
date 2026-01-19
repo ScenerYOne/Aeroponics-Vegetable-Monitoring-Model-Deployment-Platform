@@ -9,10 +9,10 @@ import uuid
 import os
 import gc  
 import time
-import torch  # สำหรับ GPU memory management
+import torch  
 
 
-MAX_LOADED_MODELS = int(os.getenv("MAX_LOADED_MODELS", 3)) # จำกัดโหลดไม่เกิน 3 ตัว
+MAX_LOADED_MODELS = int(os.getenv("MAX_LOADED_MODELS", 3)) 
 MODEL_DIR = os.getenv("MODEL_DIR", "uploaded_models")
 YOLO_CONF = 0.3
 YOLO_IOU = 0.45
@@ -133,3 +133,10 @@ async def list_models():
             for k, v in loaded_models.items()
         ]
     }
+
+
+if __name__ == "__main__":
+    import uvicorn
+    import os
+    port = int(os.environ.get("PORT", 8000)) 
+    uvicorn.run(app, host="0.0.0.0", port=port)

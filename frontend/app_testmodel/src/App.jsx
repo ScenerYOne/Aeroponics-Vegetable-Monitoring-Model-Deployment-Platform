@@ -16,10 +16,9 @@ function App() {
   const [modelFormat, setModelFormat] = useState(null);
   const [modelHistory, setModelHistory] = useState([]);
 
-  // ⭐ เพิ่ม state เดียว
   const [modelApiBase, setModelApiBase] = useState(null);
 
-  // ===== backend router =====
+ 
   const getApiBase = (filename) => {
     const ext = filename.split(".").pop().toLowerCase();
     if (["pt", "onnx"].includes(ext)) return "/api/yolo";
@@ -28,7 +27,7 @@ function App() {
   };
   
 
-  // ===== Upload Model =====
+  
   const handleModelUpload = async () => {
     if (!modelFile || !modelApiBase) return;
     setIsUploadingModel(true);
@@ -56,7 +55,7 @@ function App() {
           name: modelFile.name,
           format: data.model_format,
           class_names: data.class_names || [],
-          apiBase: modelApiBase, // ⭐ จำ backend
+          apiBase: modelApiBase, // 
         },
         ...prev,
       ]);
@@ -77,12 +76,12 @@ function App() {
     setClassNames(model.class_names || []);
     setModelFormat(model.format);
     setActiveModelName(model.name);
-    setModelApiBase(model.apiBase); // ⭐ สำคัญที่สุด
+    setModelApiBase(model.apiBase); 
     setResultImage(null);
     setDetections([]);
   };
 
-  // ===== Predict =====
+  
   const handlePredict = async () => {
     if (!testFile || !currentModelId || !modelApiBase) return;
     setIsPredicting(true);
@@ -110,7 +109,7 @@ function App() {
     }
   };
 
-  // ===== Upload Image =====
+  
   const handleTestFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
