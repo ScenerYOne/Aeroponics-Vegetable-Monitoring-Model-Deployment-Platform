@@ -91,11 +91,10 @@ function App() {
     formData.append("model_id", currentModelId);
 
     try {
-      const res = await fetch(`${modelApiBase}/predict`, {
+      const res = await fetch(`${__API_BASE__}/yolo/predict`, {
         method: "POST",
         body: formData,
       });
-
       const data = await res.json();
       if (!res.ok) throw new Error(data.detail || "Inference failed");
 
