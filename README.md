@@ -14,6 +14,8 @@ A **universal web-based platform** for testing and evaluating AI models across m
 
 All without code modification.
 
+sever: https://ai-model-deployment-evaluation-platform-1.onrender.com
+datatest : https://drive.google.com/drive/folders/13plJAkF3wHLZFqVrNljizwsa96obp50y?usp=drive_link
 ---
 
 ##  Project Evolution & Purpose
